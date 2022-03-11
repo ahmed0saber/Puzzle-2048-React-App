@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Arial;
+  font-family: "Bree Serif", Arial;
 }
 body{
   background-color: #005e61;
@@ -139,10 +139,13 @@ footer a{
 }
 .btn{
   width: fit-content;
-  display: block;
-  padding: 10px 30px;
-  font-size: 18px;
-  margin: 10px 2px 4px 2px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  font-size: 19px;
+  margin: 4px;
   background-color: #005e61;
   color: #f7f7f7;
   border: none;
@@ -152,6 +155,12 @@ footer a{
   -ms-border-radius: 1vmin;
   -o-border-radius: 1vmin;
   outline: none;
+  min-height: 54px;
+  flex: 1;
+  background-color: #383838;
+}
+.btn.move{
+  background-color: #007a7e;
 }
 .btns{
   display: flex;
@@ -163,12 +172,6 @@ footer a{
 .btns:last-of-type{
   margin-bottom: 30px;
 }
-.btns .btn.move{
-  margin: 4px;
-  width: 90px;
-  height: 45px;
-  padding: 0;
-}
 .tip{
   padding: 10px;
   background-color: #383838;
@@ -179,11 +182,13 @@ footer a{
   -ms-border-radius: 0 0 2vmin 2vmin;
   -o-border-radius: 0 0 2vmin 2vmin;
   font-size: 18px;
-  font-weight: bold;
   box-sizing: border-box;
   max-width: 90vmin;
+  margin: 0 auto;
 }
-
+.btn .fa{
+  font-size: 28px;
+}
 
 
 
@@ -211,6 +216,9 @@ footer a{
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
+}
+.leaderboard .player-card:first-of-type{
+  background-color: #383838;
 }
 .leaderboard .player-card span:nth-child(2){
   white-space: nowrap;

@@ -4,22 +4,22 @@ import Swal from 'sweetalert2'
 function Home() {
     const [score, setScore] = useState(0);
     const [tiles, setTiles] = useState([
-        {id:0, x:0, y:0, value:0},
-        {id:1, x:0, y:1, value:0},
-        {id:2, x:0, y:2, value:0},
-        {id:3, x:0, y:3, value:0},
-        {id:4, x:1, y:0, value:0},
-        {id:5, x:1, y:1, value:0},
-        {id:6, x:1, y:2, value:0},
-        {id:7, x:1, y:3, value:0},
-        {id:8, x:2, y:0, value:0},
-        {id:9, x:2, y:1, value:0},
-        {id:10, x:2, y:2, value:0},
-        {id:11, x:2, y:3, value:0},
-        {id:12, x:3, y:0, value:0},
-        {id:13, x:3, y:1, value:0},
-        {id:14, x:3, y:2, value:0},
-        {id:15, x:3, y:3, value:0}
+        {id:0, x:0, y:0, value:0, merged:false},
+        {id:1, x:0, y:1, value:0, merged:false},
+        {id:2, x:0, y:2, value:0, merged:false},
+        {id:3, x:0, y:3, value:0, merged:false},
+        {id:4, x:1, y:0, value:0, merged:false},
+        {id:5, x:1, y:1, value:0, merged:false},
+        {id:6, x:1, y:2, value:0, merged:false},
+        {id:7, x:1, y:3, value:0, merged:false},
+        {id:8, x:2, y:0, value:0, merged:false},
+        {id:9, x:2, y:1, value:0, merged:false},
+        {id:10, x:2, y:2, value:0, merged:false},
+        {id:11, x:2, y:3, value:0, merged:false},
+        {id:12, x:3, y:0, value:0, merged:false},
+        {id:13, x:3, y:1, value:0, merged:false},
+        {id:14, x:3, y:2, value:0, merged:false},
+        {id:15, x:3, y:3, value:0, merged:false}
     ])
     const [game, newGame] = useState(true)
     const [value, setValue] = useState(0)
@@ -28,23 +28,25 @@ function Home() {
     const [endX, setEndX] = useState()
     const [endY, setEndY] = useState()
 
-    function new_turn(){
-        //get a random number from 0 to 15
-        let rand=Math.floor((Math.random() * 16))
-        //get a random number 2 or 4
-        let num= Math.floor((Math.random() * 2) + 1)
-        if(num==1){
-            num=2
-        }else{
-            num=4
-        }
-        //then put number in its cell
-        if(tiles[rand].value<2){
-            let tempArray = tiles
-            tempArray[rand].value = num
-            setTiles(tempArray)
-        }else{
-            new_turn()
+    function new_turn(x){
+        if(x){
+            //get a random number from 0 to 15
+            let rand=Math.floor((Math.random() * 16))
+            //get a random number 2 or 4
+            let num= Math.floor((Math.random() * 2) + 1)
+            if(num==1){
+                num=2
+            }else{
+                num=4
+            }
+            //then put number in its cell
+            if(tiles[rand].value<2){
+                let tempArray = tiles
+                tempArray[rand].value = num
+                setTiles(tempArray)
+            }else{
+                new_turn(true)
+            }
         }
     }
 
@@ -58,8 +60,8 @@ function Home() {
             }
             setTiles(tempArray)
         }
-        new_turn()
-        new_turn()
+        new_turn(true)
+        new_turn(true)
     }
 
     useEffect(() => {
@@ -71,113 +73,137 @@ function Home() {
 
     function to_right(){
         var tempArray = tiles
+        let changed = false
         for(let y=0; y<4; y++){
-            var merged = false
             for(let x=2; x>-1; x--){
                 for(let i=x; i<3; i++){
                     let objIndex = tempArray.findIndex((obj => obj.x == i && obj.y == y))
                     let moveIndex = tempArray.findIndex((obj => obj.x == i+1 && obj.y == y))
                     if(tempArray[objIndex].x < 3 && tempArray[objIndex].value > 0 && (tempArray[moveIndex].value < 2 || tempArray[moveIndex].value == tempArray[objIndex].value)){
-                        if(tempArray[moveIndex].value == tempArray[objIndex].value && !merged){
+                        if(tempArray[moveIndex].value == tempArray[objIndex].value && !tempArray[objIndex].merged && !tempArray[moveIndex].merged){
                             tempArray[objIndex].value = tempArray[objIndex].value * 2
                             tempArray[moveIndex].value = 0
-                            merged = true
+                            tempArray[objIndex].merged = true
+                            tempArray[moveIndex].merged = true
                             setScore(score + tempArray[objIndex].value)
+                            changed = true
                         }
                         if(tempArray[moveIndex].value != tempArray[objIndex].value){
                             tempArray[objIndex].x = tempArray[objIndex].x + 1
                             tempArray[moveIndex].x = tempArray[moveIndex].x - 1
+                            changed = true
                         }
                     }
                 }
             }
         }
+        for (let n = 0; n < tempArray.length; n++) {
+            tempArray[n].merged = false
+        }
         setTiles(tempArray)
-        new_turn()
+        new_turn(changed)
         setValue(value + 1);
     }
 
     function to_left(){
         var tempArray = tiles
+        let changed = false
         for(let y=0; y<4; y++){
-            var merged = false
             for(let x=1; x<4; x++){
                 for(let i=x; i>0; i--){
                     let objIndex = tempArray.findIndex((obj => obj.x == i && obj.y == y))
                     let moveIndex = tempArray.findIndex((obj => obj.x == i-1 && obj.y == y))
                     if(tempArray[objIndex].x > 0 && tempArray[objIndex].value > 0 && (tempArray[moveIndex].value < 2 || tempArray[moveIndex].value == tempArray[objIndex].value)){
-                        if(tempArray[moveIndex].value == tempArray[objIndex].value && !merged){
+                        if(tempArray[moveIndex].value == tempArray[objIndex].value && !tempArray[objIndex].merged && !tempArray[moveIndex].merged){
                             tempArray[objIndex].value = tempArray[objIndex].value * 2
                             tempArray[moveIndex].value = 0
-                            merged = true
+                            tempArray[objIndex].merged = true
+                            tempArray[moveIndex].merged = true
                             setScore(score + tempArray[objIndex].value)
+                            changed = true
                         }
                         if(tempArray[moveIndex].value != tempArray[objIndex].value){
                             tempArray[objIndex].x = tempArray[objIndex].x - 1
                             tempArray[moveIndex].x = tempArray[moveIndex].x + 1
+                            changed = true
                         }
                     }
                 }
             }
         }
+        for (let n = 0; n < tempArray.length; n++) {
+            tempArray[n].merged = false
+        }
         setTiles(tempArray)
-        new_turn()
+        new_turn(changed)
         setValue(value + 1)
     }
 
     function to_down(){
         var tempArray = tiles
+        let changed = false
         for(let x=0; x<4; x++){
-            var merged = false
             for(let y=2; y>-1; y--){
                 for(let i=y; i<3; i++){
                     let objIndex = tempArray.findIndex((obj => obj.x == x && obj.y == i))
                     let moveIndex = tempArray.findIndex((obj => obj.x == x && obj.y == i+1))
                     if(tempArray[objIndex].y < 3 && tempArray[objIndex].value > 0 && (tempArray[moveIndex].value < 2 || tempArray[moveIndex].value == tempArray[objIndex].value)){
-                        if(tempArray[moveIndex].value == tempArray[objIndex].value && !merged){
+                        if(tempArray[moveIndex].value == tempArray[objIndex].value && !tempArray[objIndex].merged && !tempArray[moveIndex].merged){
                             tempArray[objIndex].value = tempArray[objIndex].value * 2
                             tempArray[moveIndex].value = 0
-                            merged = true
+                            tempArray[objIndex].merged = true
+                            tempArray[moveIndex].merged = true
                             setScore(score + tempArray[objIndex].value)
+                            changed = true
                         }
                         if(tempArray[moveIndex].value != tempArray[objIndex].value){
                             tempArray[objIndex].y = tempArray[objIndex].y + 1
                             tempArray[moveIndex].y = tempArray[moveIndex].y - 1
+                            changed = true
                         }
                     }
                 }
             }
         }
+        for (let n = 0; n < tempArray.length; n++) {
+            tempArray[n].merged = false
+        }
         setTiles(tempArray)
-        new_turn()
+        new_turn(changed)
         setValue(value + 1)
     }
 
     function to_top(){
         var tempArray = tiles
+        let changed = false
         for(let x=0; x<4; x++){
-            var merged = false
             for(let y=1; y<4; y++){
                 for(let i=y; i>0; i--){
                     let objIndex = tempArray.findIndex((obj => obj.x == x && obj.y == i))
                     let moveIndex = tempArray.findIndex((obj => obj.x == x && obj.y == i-1))
                     if(tempArray[objIndex].y > 0 && tempArray[objIndex].value > 0 && (tempArray[moveIndex].value < 2 || tempArray[moveIndex].value == tempArray[objIndex].value)){
-                        if(tempArray[moveIndex].value == tempArray[objIndex].value && !merged){
+                        if(tempArray[moveIndex].value == tempArray[objIndex].value && !tempArray[objIndex].merged && !tempArray[moveIndex].merged){
                             tempArray[objIndex].value = tempArray[objIndex].value * 2
                             tempArray[moveIndex].value = 0
-                            merged = true
+                            tempArray[objIndex].merged = true
+                            tempArray[moveIndex].merged = true
                             setScore(score + tempArray[objIndex].value)
+                            changed = true
                         }
                         if(tempArray[moveIndex].value != tempArray[objIndex].value){
                             tempArray[objIndex].y = tempArray[objIndex].y - 1
                             tempArray[moveIndex].y = tempArray[moveIndex].y + 1
+                            changed = true
                         }
                     }
                 }
             }
         }
+        for (let n = 0; n < tempArray.length; n++) {
+            tempArray[n].merged = false
+        }
         setTiles(tempArray)
-        new_turn()
+        new_turn(changed)
         setValue(value + 1)
     }
 
@@ -333,17 +359,14 @@ function Home() {
         </div>
 
         <div className="btns">
-            <button className="btn move" onClick={to_top}>Top</button>
-        </div>
-        <div className="btns">
-            <button className="btn move" onClick={to_left}>Left</button>
-            <button className="btn move" onClick={to_down}>Down</button>
-            <button className="btn move" onClick={to_right}>Right</button>
-        </div>
-
-        <div className="btns">
             <button className="btn" onClick={save}>Save</button>
+            <button className="btn move" onClick={to_top}><i className="fa fa-angle-up"></i></button>
             <button className="btn" onClick={load}>Load</button>
+        </div>
+        <div className="btns">
+            <button className="btn move" onClick={to_left}><i className="fa fa-angle-left"></i></button>
+            <button className="btn move" onClick={to_down}><i className="fa fa-angle-down"></i></button>
+            <button className="btn move" onClick={to_right}><i className="fa fa-angle-right"></i></button>
         </div>
 
         <div className="btns">

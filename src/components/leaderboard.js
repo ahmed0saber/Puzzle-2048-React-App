@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react"
 
 function Leaderboard() {
-    const [players, setPlayers] = useState([
-        {id:0, name:"Loading", score:"Loading"}
-    ])
+    const [players, setPlayers] = useState([])
     const [opened, setOpened] = useState(false)
 
     const getData = () => {
