@@ -1,15 +1,30 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 function Leaderboard() {
     const [players, setPlayers] = useState([
-        {id:0, user:"ahmed0saber", score:6400},
-        {id:1, user:"Zero", score:4000},
-        {id:2, user:"unkwown", score:1000},
-        {id:15, user:"Ahmed Saber", score:800}
-    ]);
+        {id:0, name:"Loading", score:"Loading"}
+    ])
+    const [opened, setOpened] = useState(false)
+
+    const getData = () => {
+        const url = "https://api-and-websockets.herokuapp.com/api/get_scores/react-puzzle/"
+        fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            setPlayers(data)
+        })
+    }
+
+    useEffect(() => {
+        if(!opened){
+            getData()
+            setOpened(true)
+        }
+    },[])
 
     return <main className="leaderboard">
-            {[...players].map((el, i) => el.score>0 && el.score%2==0 ? (<div className="player-card" key={el.id}>{i+1} --- {el.user} --- {el.score}</div>) : null )}
+            <div className="player-card"><span>Rank</span><span>Username</span><span>Score</span></div>
+            {[...players].map((el, i) => el.score>0 && el.score%2==0 ? (<div className="player-card" key={el.id}><span>{i+1}</span><span>{el.name}</span><span>{el.score}</span></div>) : null )}
         </main>
 }
 

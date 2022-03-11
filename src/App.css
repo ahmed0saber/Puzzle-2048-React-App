@@ -72,19 +72,21 @@ footer a{
   margin: 2vmin 0 0 2vmin;
 }
 .game{
+  width: fit-content;
   display: grid;
   grid-template-rows: repeat(4, 20vmin);
   grid-template-columns: repeat(4, 20vmin);
   background-color: #212121;
   gap: 2vmin;
   padding: 2vmin;
-  margin: 2vmin;
+  margin: 2vmin auto;
   border-radius: 1vmin;
   -webkit-border-radius: 1vmin;
   -moz-border-radius: 1vmin;
   -ms-border-radius: 1vmin;
   -o-border-radius: 1vmin;
   position: relative;
+  touch-action: none;
 }
 .cell{
   background-color: #383838;
@@ -149,6 +151,7 @@ footer a{
   -moz-border-radius: 1vmin;
   -ms-border-radius: 1vmin;
   -o-border-radius: 1vmin;
+  outline: none;
 }
 .btns{
   display: flex;
@@ -165,6 +168,20 @@ footer a{
   width: 90px;
   height: 45px;
   padding: 0;
+}
+.tip{
+  padding: 10px;
+  background-color: #383838;
+  color: #f7f7f7;
+  border-radius: 0 0 2vmin 2vmin;
+  -webkit-border-radius: 0 0 2vmin 2vmin;
+  -moz-border-radius: 0 0 2vmin 2vmin;
+  -ms-border-radius: 0 0 2vmin 2vmin;
+  -o-border-radius: 0 0 2vmin 2vmin;
+  font-size: 18px;
+  font-weight: bold;
+  box-sizing: border-box;
+  max-width: 90vmin;
 }
 
 
@@ -189,4 +206,15 @@ footer a{
   padding: 4vmin;
   margin: 1vmin;
   font-size: 18px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.leaderboard .player-card span:nth-child(2){
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 50%;
 }
