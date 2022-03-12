@@ -383,6 +383,9 @@ function Home() {
             <button className="btn" onClick={new_game}>New Game</button>
             <button className="btn" onClick={submitScore}>Submit Score</button>
         </div>
+
+        <input type="hidden" value={JSON.stringify(tiles)} id="gno"/>
+
     </main>
 }
 
