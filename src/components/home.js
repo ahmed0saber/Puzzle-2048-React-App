@@ -27,6 +27,7 @@ function Home() {
     const [startY, setStartY] = useState()
     const [endX, setEndX] = useState()
     const [endY, setEndY] = useState()
+    const [highScore, setHighScore] = useState(localStorage.getItem("highscore"))
 
     function new_turn(x){
         if(x){
@@ -334,8 +335,17 @@ function Home() {
     function autoSave(){
         localStorage.setItem("autoBoard", JSON.stringify(tiles))
         localStorage.setItem("autoScore", score)
+        if(localStorage.getItem("highscore")){
+            localStorage.setItem("highscore", highScore)
+        }else{
+            localStorage.setItem("highscore", 0)
+            setHighScore(0)
+        }
     }
     useEffect(() => {
+        if(score > highScore){
+            setHighScore(score)
+        }
         autoSave()
     })
 
@@ -352,7 +362,7 @@ function Home() {
 
     return <main>
         <p className="tip">You can play with keyboard using w, s, a and d , Swipe on a touch screen or use the buttons below.</p>
-        <h3 className="score">Score: {score}</h3>
+        <h3 className="score"><span>Score: {score}</span><span>Highest score: {highScore}</span></h3>
         <div className="game" onTouchStart={startTouch} onTouchMove={moveTouch} onTouchEnd={endTouch}>
             {[...Array(16)].map((el, i) => (<div className="cell" key={i}></div>))}
             {[...tiles].map(el => el.value>0 ? (<div className="tile" key={el.id} Style={`--x:${el.x};--y:${el.y};--bg:${88-Math.log2(el.value)*(5+28/el.value)}%;--text:${el.value>2048 ? 100 : 0}%`}>{el.value}</div>) : null )}

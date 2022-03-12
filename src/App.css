@@ -69,7 +69,11 @@ footer a{
 
 
 .score{
-  margin: 2vmin 0 0 2vmin;
+  margin: 2vmin;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
 }
 .game{
   width: fit-content;
