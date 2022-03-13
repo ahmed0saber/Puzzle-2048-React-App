@@ -28,6 +28,7 @@ function Home() {
     const [endX, setEndX] = useState()
     const [endY, setEndY] = useState()
     const [highScore, setHighScore] = useState(localStorage.getItem("highscore"))
+    const [lose, setLose] = useState(false)
 
     function new_turn(x){
         if(x){
@@ -52,6 +53,7 @@ function Home() {
     }
 
     function new_game(){
+        setLose(false)
         newGame(!game)
         setScore(0)
         for(let i=0;i<16;i++){
@@ -275,6 +277,7 @@ function Home() {
                 icon: 'success',
                 title: 'Loaded successfully.'
             })
+            setLose(false)
         }else{
             Swal.fire({
                 icon: 'info',
@@ -355,10 +358,44 @@ function Home() {
             setScore(parseInt(localStorage.getItem("autoScore")))
             Swal.fire({
                 icon: 'success',
-                title: 'Resume your last game, You can start a new game if you want or load a saved game.'
+                title: 'Resume your last game.'
             })
+            setLose(false)
         }
     }
+
+    function checkLose(){
+        for (let i=0; i<4; i++){
+            for(let j=0; j<3; j++){
+                let tempArray = tiles
+                let objIndex = tempArray.findIndex((obj => obj.x == j && obj.y == i))
+                let moveIndex = tempArray.findIndex((obj => obj.x == j+1 && obj.y == i))
+                if(tempArray[moveIndex].value < 2 || tempArray[moveIndex].value == tempArray[objIndex].value){
+                    return false
+                }
+            }
+        }
+        for (let i=0; i<4; i++){
+            for(let j=0; j<3; j++){
+                let tempArray = tiles
+                let objIndex = tempArray.findIndex((obj => obj.x == i && obj.y == j))
+                let moveIndex = tempArray.findIndex((obj => obj.x == i && obj.y == j+1))
+                if(tempArray[moveIndex].value < 2 || tempArray[moveIndex].value == tempArray[objIndex].value){
+                    return false
+                }
+            }
+        }
+        return true
+    }
+    useEffect(() => {
+        if(checkLose() && !lose){
+            Swal.fire({
+                icon: 'warning',
+                title: 'You lose.'
+            })
+            setLose(true)
+        }
+    })
 
     return <main>
         <p className="tip">You can play with keyboard using w, s, a and d , Swipe on a touch screen or use the buttons below.</p>
