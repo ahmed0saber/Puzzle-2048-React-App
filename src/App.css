@@ -26,7 +26,7 @@ nav div.links{
   flex: 1;
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
+  justify-content: flex-end;
 }
 nav div.links a{
   color: #e3e3e3;
@@ -65,21 +65,17 @@ footer a{
 }
 
 
-
-
-
 .score{
-  margin: 2vmin;
+  margin: 2vmin 2vmin 1vmin 2vmin;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-
 }
 .game{
   width: fit-content;
   display: grid;
-  grid-template-rows: repeat(4, 20vmin);
-  grid-template-columns: repeat(4, 20vmin);
+  grid-template-rows: repeat(4, min(20vmin, 90px));
+  grid-template-columns: repeat(4, min(20vmin, 90px));
   background-color: #212121;
   gap: 2vmin;
   padding: 2vmin;
@@ -104,8 +100,8 @@ footer a{
   font-size: 6.4vmin;
   display: grid;
   place-items: center;
-  width: 20vmin;
-  height: 20vmin;
+  width: min(20vmin, 90px);
+  height: min(20vmin, 90px);
   border-radius: 1vmin;
   -webkit-border-radius: 1vmin;
   -moz-border-radius: 1vmin;
@@ -116,8 +112,8 @@ footer a{
   --y: 1;
   /*left: calc(var(--x) * 20vmin + 2 * 1vmin + var(--x) * 2vmin);
   top: calc(var(--y) * 20vmin + 2 * 1vmin + var(--y) * 2vmin);*/
-  left: calc(var(--x) * 22vmin + 2vmin);
-  top: calc(var(--y) * 22vmin + 2vmin);
+  left: calc(var(--x) * (min(20vmin, 90px) + 2vmin) + 2vmin);
+  top: calc(var(--y) * (min(20vmin, 90px) + 2vmin) + 2vmin);
   --bg: 30%;
   --text: 90%;
   background-color: hsl(178, 80%, var(--bg));
@@ -164,7 +160,7 @@ footer a{
   background-color: #383838;
 }
 .btn.move{
-  background-color: #007a7e;
+  background-color: #00969b;
 }
 .btns{
   display: flex;
@@ -193,8 +189,6 @@ footer a{
 .btn .fa{
   font-size: 28px;
 }
-
-
 
 
 .leaderboard{
@@ -229,4 +223,11 @@ footer a{
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 50%;
+}
+
+
+@media screen and (max-width: 700px) {
+  .links span{
+    display: none;
+  }
 }
