@@ -29,22 +29,44 @@ function Home() {
     const [endY, setEndY] = useState()
     const [highScore, setHighScore] = useState(localStorage.getItem("highscore"))
     const [lose, setLose] = useState(false)
+    const [num1, setNum1] = useState(2)
+    const [num2, setNum2] = useState(4)
 
     function new_turn(x){
         if(x){
-            //get a random number from 0 to 15
-            let rand=Math.floor((Math.random() * 16))
-            //get a random number 2 or 4
-            let num= Math.floor((Math.random() * 2) + 1)
-            if(num==1){
-                num=2
-            }else{
-                num=4
+            
+            //detect the highest number on the board
+            let highestNum = 4
+            for(let a=0; a<16; a++){
+                if(tiles[a].value > highestNum){
+                    highestNum = tiles[a].value
+                }
             }
+            console.log(highestNum)
+            //calculate all possible numbers less than the highest one
+            let myPossibilities = []
+            for(let b=2; b < highestNum; b*=2){
+                console.log(Math.log2(b))
+                myPossibilities.push(b)
+            }
+            console.table(myPossibilities)
+            //get a random position from 0 to 15
+            let position = Math.floor((Math.random() * 16))
+            //get a random number from all possibilities
+            let rand = Math.floor((Math.random() * myPossibilities.length))
+            let num = myPossibilities[rand]
+
+            /*let num = Math.floor((Math.random() * 2) + 1)
+            if(num==1){
+                num = num1
+            }else{
+                num = num2
+            }*/
+
             //then put number in its cell
-            if(tiles[rand].value<2){
+            if(tiles[position].value<2){
                 let tempArray = tiles
-                tempArray[rand].value = num
+                tempArray[position].value = num
                 setTiles(tempArray)
             }else{
                 new_turn(true)
@@ -365,9 +387,13 @@ function Home() {
     }
 
     function checkLose(){
+        let tempArray = tiles
         for (let i=0; i<4; i++){
+            let objIndex = tempArray.findIndex((obj => obj.x == 0 && obj.y == i))
+            if(tempArray[objIndex].value == 0){
+                return false
+            }
             for(let j=0; j<3; j++){
-                let tempArray = tiles
                 let objIndex = tempArray.findIndex((obj => obj.x == j && obj.y == i))
                 let moveIndex = tempArray.findIndex((obj => obj.x == j+1 && obj.y == i))
                 if(tempArray[moveIndex].value < 2 || tempArray[moveIndex].value == tempArray[objIndex].value){
@@ -376,8 +402,11 @@ function Home() {
             }
         }
         for (let i=0; i<4; i++){
+            let objIndex = tempArray.findIndex((obj => obj.x == i && obj.y == 0))
+            if(tempArray[objIndex].value == 0){
+                return false
+            }
             for(let j=0; j<3; j++){
-                let tempArray = tiles
                 let objIndex = tempArray.findIndex((obj => obj.x == i && obj.y == j))
                 let moveIndex = tempArray.findIndex((obj => obj.x == i && obj.y == j+1))
                 if(tempArray[moveIndex].value < 2 || tempArray[moveIndex].value == tempArray[objIndex].value){
@@ -420,9 +449,6 @@ function Home() {
             <button className="btn" onClick={new_game}>New Game</button>
             <button className="btn" onClick={submitScore}>Submit Score</button>
         </div>
-
-        <input type="hidden" value={JSON.stringify(tiles)} id="gno"/>
-
     </main>
 }
 
