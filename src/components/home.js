@@ -35,7 +35,7 @@ function Home() {
     function new_turn(x){
         if(x){
             
-            //detect the highest number on the board
+            /*//detect the highest number on the board
             let highestNum = 4
             for(let a=0; a<16; a++){
                 if(tiles[a].value > highestNum){
@@ -54,14 +54,15 @@ function Home() {
             let position = Math.floor((Math.random() * 16))
             //get a random number from all possibilities
             let rand = Math.floor((Math.random() * myPossibilities.length))
-            let num = myPossibilities[rand]
+            let num = myPossibilities[rand]*/
 
-            /*let num = Math.floor((Math.random() * 2) + 1)
+            let position = Math.floor((Math.random() * 16))
+            let num = Math.floor((Math.random() * 2) + 1)
             if(num==1){
                 num = num1
             }else{
                 num = num2
-            }*/
+            }
 
             //then put number in its cell
             if(tiles[position].value<2){
